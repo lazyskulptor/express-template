@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npx jest --detectOpenHandles",
+    "test:container": "npx jest --detectOpenHandles",
     "build": "npm run lint && tsc --p tsconfig.build.json",
     "start": "node dist/index.js",
     "dev:start": "npm run build && node dist/index.js",

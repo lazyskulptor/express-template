@@ -8,7 +8,7 @@ import { BadRequestException, NotFoundException } from '@/domain/exceptions';
 import router from '@/router/user-router';
 import * as process from "process";
 
-const envFile = process.env.NODE_ENV === 'development' ? '.env.dev' : '.env';
+const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
 console.info('NODE RUN IN ENV ' + process.env.NODE_ENV);
 dotenv.config({
   path: envFile
