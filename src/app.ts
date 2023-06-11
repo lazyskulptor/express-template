@@ -1,8 +1,8 @@
-import * as express from 'express';
+import express from 'express';
 import { ErrorRequestHandler } from "express";
 import {urlencoded, json as jsonencoded} from 'body-parser';
 import * as bodyParser from 'body-parser';
-import * as cors from "cors";
+import cors from "cors";
 import * as dotenv from "dotenv";
 import { BadRequestException, NotFoundException } from '@/domain/exceptions';
 import router from '@/router/user-router';

@@ -1,23 +1,32 @@
-import sequelize from '@/repo/sequelize-ctx';
-import Member from "@/domain/model/Member";
+import initOrm from '@/repo/repo-context';
+import Member from '@/domain/model/Member';
+import { MikroORM } from '@mikro-orm/core';
 
 describe('CRUD user from Database', () => {
+  let orm: MikroORM;
 
   beforeAll(async () => {
-    await sequelize.query(`CREATE TABLE member (id INTEGER, name TEXT)`);
-    await sequelize.query(`CREATE TABLE authority (name TEXT)`);
-    await sequelize.query(`CREATE TABLE member_auth_rel (memberId INTEGER, authorityName TEXT)`);
+    orm = await initOrm();
   });
 
+  afterAll(async () => {
+    await orm.close();
+  })
+
   it('should work', async () => {
+    const em = orm.em.fork();
+    const mem = new Member();
+    mem.name = 'Park';
 
-    console.debug('hello world');
-    const repo = sequelize.getRepository(Member);
-    const list = await repo.findAll();
+    await em.persistAndFlush(mem);
 
-    // const obj = new Member();
-    // console.debug(obj);
-    console.debug(Member.toString());
-    console.debug(list);
+    const list = await em.find(Member, {});
+
+    expect(list.length).toBeGreaterThan(0);
+
+    for (const m of list) {
+      expect(m).toBeInstanceOf(Member)
+      expect(m.id).not.toBeNull();
+    }
   });
 });

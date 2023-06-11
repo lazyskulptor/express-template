@@ -40,3 +40,7 @@ lerna-debug.log*
 ## local file
 .env
 .env.local
+
+# mikro-orm
+temp
+src/migrations/sqlite

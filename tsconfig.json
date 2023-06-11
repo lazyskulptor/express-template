@@ -8,6 +8,8 @@
     "outDir": "./dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "declaration": true,
     "sourceMap": true,
     "baseUrl": "./",
     "paths": {
