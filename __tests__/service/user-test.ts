@@ -17,6 +17,7 @@ describe('CRUD user from Database', () => {
     const em = orm.em.fork();
     const mem = new Member();
     mem.name = 'Park';
+    mem.comment = 'test insertion';
 
     await em.persistAndFlush(mem);
 
@@ -25,6 +26,7 @@ describe('CRUD user from Database', () => {
     expect(list.length).toBeGreaterThan(0);
 
     for (const m of list) {
+      console.debug(m);
       expect(m).toBeInstanceOf(Member)
       expect(m.id).not.toBeNull();
     }

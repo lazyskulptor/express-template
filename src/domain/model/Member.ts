@@ -5,8 +5,11 @@ export default class Member {
 
   @PrimaryKey()
   @Property()
-  id!: number;
+  id: number;
 
   @Property()
-  name!: string;
+  name: string;
+
+  @Property()
+  comment?: string;
 }
