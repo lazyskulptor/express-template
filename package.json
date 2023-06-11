@@ -8,7 +8,7 @@
     "build": "npm run lint && tsc --p tsconfig.build.json",
     "start": "node dist/index.js",
     "dev:start": "npm run build && node dist/index.js",
-    "dev": "nodemon --watch src -e ts --exec npm run dev:start",
+    "dev": "nodemon --watch src -i src/migrations/sqlite -i src/migrations/mysql -e ts --exec npm run dev:start",
     "lint": "eslint . --ext .ts"
   },
   "_moduleAliases": {

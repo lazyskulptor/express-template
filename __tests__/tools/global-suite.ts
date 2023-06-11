@@ -1,9 +1,9 @@
-import ctx from "@/app-context";
-import initOrm, { basicOption } from '@/repo/repo-context';
 import { MySqlContainer, StartedMySqlContainer } from "testcontainers";
-import fs from 'fs/promises';
+import { MikroORM } from "@mikro-orm/core";
+import { migrate } from "@/migrations/utils";
 
 let mysqlContainer: StartedMySqlContainer;
+let orm: MikroORM;
 const startContainer = async () => {
   const { TESTCONTAINERS } = process.env;
   if (!TESTCONTAINERS || TESTCONTAINERS.toUpperCase() === 'FALSE')
@@ -20,29 +20,16 @@ const startContainer = async () => {
 };
 
 const stopContainer = async () => {
-  if (!!mysqlContainer)
+  if (mysqlContainer)
     return await mysqlContainer.stop();
-}
-
-const migrate = async () => {
-  const { DB_TYPE } = process.env;
-  const orm = await initOrm();
-  const migrator = orm.getMigrator();
-
-  if (DB_TYPE === 'sqlite') {
-    // clean sqlite directory
-    await fs.rm(basicOption.migrations.pathTs, { recursive: true });
-    await fs.mkdir(basicOption.migrations.pathTs);
-    await migrator.createInitialMigration();
-  }
-  await migrator.up();
-}
+};
 
 beforeAll(async () => {
   mysqlContainer = await startContainer();
-  await migrate();
+  orm = await migrate();
 }, 30 * 1000);
 
 afterAll(async () => {
+  await orm.close();
   await stopContainer();
 });

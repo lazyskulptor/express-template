@@ -41,7 +41,7 @@ const initOrm = async () => {
   }
 
   return orm;
-}
+};
 
 
 export default initOrm;

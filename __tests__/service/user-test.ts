@@ -9,10 +9,6 @@ describe('CRUD user from Database', () => {
     orm = await initOrm();
   });
 
-  afterAll(async () => {
-    await orm.close();
-  })
-
   it('should work', async () => {
     const em = orm.em.fork();
     const mem = new Member();
@@ -27,7 +23,7 @@ describe('CRUD user from Database', () => {
 
     for (const m of list) {
       console.debug(m);
-      expect(m).toBeInstanceOf(Member)
+      expect(m).toBeInstanceOf(Member);
       expect(m.id).not.toBeNull();
     }
   });
