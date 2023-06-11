@@ -1,20 +1,35 @@
-import ctx from "@/app-context";
-import {
-  MySqlContainer,
-} from "testcontainers";
-import {StartedMySqlContainer} from "testcontainers";
+import { MySqlContainer, StartedMySqlContainer } from "testcontainers";
+import { MikroORM } from "@mikro-orm/core";
+import { migrate } from "@/migrations/utils";
 
-let startedContainer: StartedMySqlContainer;
+let mysqlContainer: StartedMySqlContainer;
+let orm: MikroORM;
+const startContainer = async () => {
+  const { TESTCONTAINERS } = process.env;
+  if (!TESTCONTAINERS || TESTCONTAINERS.toUpperCase() === 'FALSE')
+    return;
+  
+  const container = await new MySqlContainer().start();
+  console.debug(container.getHost());
+  process.env.DB_HOST = container.getHost();
+  process.env.DB_USERNAME = container.getUsername();
+  process.env.DB_PASSWORD = container.getUserPassword();
+  process.env.DB_DATABASE = container.getDatabase();
+  process.env.DB_PORT = String(container.getPort());
+  return container;
+};
+
+const stopContainer = async () => {
+  if (mysqlContainer)
+    return await mysqlContainer.stop();
+};
+
 beforeAll(async () => {
-  startedContainer = await new MySqlContainer().start();
-  console.debug(startedContainer.getHost());
-  process.env.DB_HOST = startedContainer.getHost();
-  process.env.DB_USERNAME = startedContainer.getUsername();
-  process.env.DB_PASSWORD = startedContainer.getUserPassword();
-  process.env.DB_DATABASE = startedContainer.getDatabase();
-  process.env.DB_PORT = String(startedContainer.getPort());
+  mysqlContainer = await startContainer();
+  orm = await migrate();
 }, 30 * 1000);
 
 afterAll(async () => {
-  await startedContainer.stop();
+  await orm.close();
+  await stopContainer();
 });

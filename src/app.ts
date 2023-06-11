@@ -1,18 +1,13 @@
-import * as express from 'express';
+import express from 'express';
 import { ErrorRequestHandler } from "express";
 import {urlencoded, json as jsonencoded} from 'body-parser';
-import * as bodyParser from 'body-parser';
-import * as cors from "cors";
-import * as dotenv from "dotenv";
+import bodyParser from 'body-parser';
+import cors from "cors";
 import { BadRequestException, NotFoundException } from '@/domain/exceptions';
 import router from '@/router/user-router';
-import * as process from "process";
+import { RequestContext } from '@mikro-orm/core';
+import initOrm from './repo/repo-context';
 
-const envFile = process.env.NODE_ENV === 'development' ? '.env.dev' : '.env';
-console.info('NODE RUN IN ENV ' + process.env.NODE_ENV);
-dotenv.config({
-  path: envFile
-});
 const app = express();
 
 app.use(cors());
@@ -21,6 +16,7 @@ app.use(urlencoded({
 }));
 app.use(jsonencoded());
 app.use(bodyParser.json());
+app.use(async (_req, _res, next) => RequestContext.create((await initOrm()).em, next));
 app.use(router);
 
 const errorHandler = (err, req, res, _next): ErrorRequestHandler => {

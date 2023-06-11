@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 import { handler } from "@/router/utils";
 
 const router = express.Router();
