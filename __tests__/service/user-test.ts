@@ -1,30 +1,32 @@
 import initOrm from '@/repo/repo-context';
 import Member from '@/domain/model/Member';
-import { MikroORM } from '@mikro-orm/core';
+import { EntityManager, MikroORM } from '@mikro-orm/core';
+import MemberService from '@/service/MemberService';
+import MemberRepoImpl from '@/repo/impl/MemberRepoImpl';
 
-describe('CRUD user from Database', () => {
+describe('Meber CRUD', () => {
   let orm: MikroORM;
+  let svc: MemberService;
+  let em: EntityManager;
 
   beforeAll(async () => {
     orm = await initOrm();
+    em = orm.em.fork();
+    svc = new MemberService(new MemberRepoImpl(em));
   });
 
-  it('should work', async () => {
-    const em = orm.em.fork();
+  it('find entity', async () => {
     const mem = new Member();
     mem.name = 'Park';
     mem.comment = 'test insertion';
 
     await em.persistAndFlush(mem);
+    console.debug(mem);
 
-    const list = await em.find(Member, {});
+    const persisted = await svc.findById(mem.id);
 
-    expect(list.length).toBeGreaterThan(0);
-
-    for (const m of list) {
-      console.debug(m);
-      expect(m).toBeInstanceOf(Member);
-      expect(m.id).not.toBeNull();
-    }
+    console.debug(persisted);
+    console.debug(persisted === mem);
+    expect(persisted.name).toBe('Park');
   });
 });
