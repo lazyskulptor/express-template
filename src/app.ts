@@ -6,7 +6,7 @@ import cors from "cors";
 import { BadRequestException, NotFoundException } from '@/domain/exceptions';
 import router from '@/router/user-router';
 import { RequestContext } from '@mikro-orm/core';
-import initOrm from './repo/repo-context';
+import initOrm from '@/repo/repo-context';
 
 const app = express();
 
