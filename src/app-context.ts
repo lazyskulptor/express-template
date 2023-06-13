@@ -1,3 +1,14 @@
-const ctx = {};
+import { repoContext } from "./repo/repo-context";
+import MemberService from "./service/MemberService";
+
+type AppContext = {
+  memSvc: MemberService;
+}
+let context = {} as AppContext;
+const ctx = () => {
+  context.memSvc = context.memSvc ?? new MemberService(repoContext().memRepo);
+
+  return context;
+};
 
 export default ctx;

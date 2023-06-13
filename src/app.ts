@@ -5,19 +5,7 @@ import bodyParser from 'body-parser';
 import cors from "cors";
 import { BadRequestException, NotFoundException } from '@/domain/exceptions';
 import router from '@/router/user-router';
-import { RequestContext } from '@mikro-orm/core';
-import initOrm from '@/repo/repo-context';
-
-const app = express();
-
-app.use(cors());
-app.use(urlencoded({
-  extended: true
-}));
-app.use(jsonencoded());
-app.use(bodyParser.json());
-app.use(async (_req, _res, next) => RequestContext.create((await initOrm()).em, next));
-app.use(router);
+import { MikroORM, RequestContext } from '@mikro-orm/core';
 
 const errorHandler = (err, req, res, _next): ErrorRequestHandler => {
   const obj = {
@@ -45,7 +33,26 @@ const errorHandler = (err, req, res, _next): ErrorRequestHandler => {
     return res.status(obj.code).json(obj);
   }
 };
-app.use(errorHandler);
+
+let app: express.Express;
+const initApp = async (orm: MikroORM) => {
+  if (app) return app;
+
+  app = express();
+
+  app.use(cors());
+  app.use(urlencoded({
+    extended: true
+  }));
+  app.use(jsonencoded());
+  app.use(bodyParser.json());
+  app.use((_req, _res, next) => RequestContext.create(orm.em, next));
+  app.use(router);
+
+  app.use(errorHandler);
+
+  return app;
+};
 
 
-export default app;
+export default initApp;
