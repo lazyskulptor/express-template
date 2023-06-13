@@ -1,3 +1,5 @@
-export const handler = (cb: (req, res) => Promise<void>) => (
-  (rq, rs, next): Promise<void> => cb(rq, rs).catch(next)
+import { Request, Response, NextFunction } from 'express';
+
+export const handler = (cb: (req: Request, res: Response) => Promise<void>) => (
+  (rq: Request, rs: Response, next: NextFunction): Promise<void> => cb(rq, rs).catch(next)
 );

@@ -10,7 +10,6 @@ const startContainer = async () => {
     return;
   
   const container = await new MySqlContainer().start();
-  console.debug(container.getHost());
   process.env.DB_HOST = container.getHost();
   process.env.DB_USERNAME = container.getUsername();
   process.env.DB_PASSWORD = container.getUserPassword();

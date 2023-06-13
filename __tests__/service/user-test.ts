@@ -15,18 +15,69 @@ describe('Meber CRUD', () => {
     svc = new MemberService(new MemberRepoImpl(em));
   });
 
-  it('find entity', async () => {
+  it('successes to insert', async () => {
     const mem = new Member();
     mem.name = 'Park';
     mem.comment = 'test insertion';
 
-    await em.persistAndFlush(mem);
-    console.debug(mem);
+    await svc.persist(mem);
+    await em.flush();
+
+    expect(mem.id).not.toBeNull();
+  });
+
+  it('fails to insert', async () => {
+    const mem = new Member();
+    mem.name = 'Park';
+    mem.comment = 'test insertion';
+
+    await svc.persist(mem);
+
+    expect(mem.id).toBeNull();
+  });
+
+  it('find', async () => {
+    const mem = new Member();
+    mem.name = 'Park';
+    mem.comment = 'test insertion';
+
+    await svc.persist(mem);
+    await em.flush();
 
     const persisted = await svc.findById(mem.id);
 
-    console.debug(persisted);
-    console.debug(persisted === mem);
     expect(persisted.name).toBe('Park');
+  });
+
+  it('update', async () => {
+    const mem = new Member();
+    mem.name = 'Park';
+    mem.comment = 'test insertion';
+
+    const inserted = svc.persist(mem);
+    await em.flush();
+    mem.name = 'Lee';
+    mem.id = inserted.id;
+    svc.persist(mem);
+    await em.flush();
+
+    const persisted = await svc.findById(inserted.id);
+
+    console.debug(persisted);
+    expect(persisted.name).toBe('Lee');
+  });
+
+  it('delete', async () => {
+    const mem = new Member();
+    mem.name = 'Park';
+    mem.comment = 'test insertion';
+
+    await svc.persist(mem);
+    await em.flush();
+    await svc.deleteById(mem.id);
+    await em.flush();
+
+    const persisted = await svc.findById(mem.id);
+    expect(persisted).toBeUndefined();
   });
 });
