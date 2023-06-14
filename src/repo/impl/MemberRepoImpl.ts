@@ -1,8 +1,8 @@
 import Member from '@/domain/model/Member';
-import MemberRepo from '@/service/MemberRepo';
-import { EntityManager, Reference, wrap, WrappedEntity } from '@mikro-orm/core';
+import Repository from '@/service/Repository';
+import { EntityManager, wrap } from '@mikro-orm/core';
 
-export default class MemberRepoImpl implements MemberRepo {
+export default class MemberRepoImpl implements Repository<Member, Number> {
   constructor(private em: EntityManager) {}
 
   persist (entity: Member) {
@@ -27,4 +27,8 @@ export default class MemberRepoImpl implements MemberRepo {
   async findById (id: number) {
     return await this.em.findOne(Member, { id });
   };
+
+  flush() {
+    return this.em.flush();
+  }
 }

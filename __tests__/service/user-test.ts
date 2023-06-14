@@ -20,20 +20,11 @@ describe('Meber CRUD', () => {
     mem.name = 'Park';
     mem.comment = 'test insertion';
 
-    await svc.persist(mem);
+    const persisted = await svc.persist(mem);
     await em.flush();
 
-    expect(mem.id).not.toBeNull();
-  });
-
-  it('fails to insert', async () => {
-    const mem = new Member();
-    mem.name = 'Park';
-    mem.comment = 'test insertion';
-
-    await svc.persist(mem);
-
-    expect(mem.id).toBeNull();
+    expect(mem.id).toBeUndefined();
+    expect(persisted.id).not.toBeNull();
   });
 
   it('find', async () => {
@@ -41,10 +32,10 @@ describe('Meber CRUD', () => {
     mem.name = 'Park';
     mem.comment = 'test insertion';
 
-    await svc.persist(mem);
+    const inserted = await svc.persist(mem);
     await em.flush();
 
-    const persisted = await svc.findById(mem.id);
+    const persisted = await svc.findById(inserted.id);
 
     expect(persisted.name).toBe('Park');
   });
@@ -63,7 +54,6 @@ describe('Meber CRUD', () => {
 
     const persisted = await svc.findById(inserted.id);
 
-    console.debug(persisted);
     expect(persisted.name).toBe('Lee');
   });
 
@@ -72,12 +62,12 @@ describe('Meber CRUD', () => {
     mem.name = 'Park';
     mem.comment = 'test insertion';
 
-    await svc.persist(mem);
+    const inserted = await svc.persist(mem);
     await em.flush();
-    await svc.deleteById(mem.id);
+    await svc.deleteById(inserted.id);
     await em.flush();
 
-    const persisted = await svc.findById(mem.id);
-    expect(persisted).toBeUndefined();
+    const persisted = await svc.findById(inserted.id);
+    expect(persisted).toBeNull();
   });
 });

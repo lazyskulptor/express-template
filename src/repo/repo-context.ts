@@ -3,7 +3,8 @@ import { MySqlDriver } from '@mikro-orm/mysql';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import MemberRepoImpl from './impl/MemberRepoImpl';
-import MemberRepo from '@/service/MemberRepo';
+import Repository from '@/service/Repository';
+import Member from '@/domain/model/Member';
 
 const { DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT, DB_TYPE } = process.env;
 const isPool = process.env.NODE_ENV === 'production' || process.env.NODE_ENV !== 'test';
@@ -47,7 +48,7 @@ const initOrm = async () => {
 };
 
 type RepoContext = {
-  memRepo: MemberRepo;
+  memRepo: Repository<Member, Number>;
 };
 
 const ctx = {} as RepoContext;
