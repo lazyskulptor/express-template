@@ -54,11 +54,11 @@ describe('Meber CRUD', () => {
     mem.name = 'Park';
     mem.comment = 'test insertion';
 
-    const inserted = svc.persist(mem);
+    const inserted = await svc.persist(mem);
     await em.flush();
     mem.name = 'Lee';
     mem.id = inserted.id;
-    svc.persist(mem);
+    await svc.persist(mem);
     await em.flush();
 
     const persisted = await svc.findById(inserted.id);

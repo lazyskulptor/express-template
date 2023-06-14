@@ -5,7 +5,7 @@ export default class MemberService {
   constructor(private repo: MemberRepo) {
   }
 
-  persist (entity: Member) {
+  async persist (entity: Member) {
     return this.repo.persist(entity);
   }
 
