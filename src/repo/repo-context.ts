@@ -10,6 +10,7 @@ const { DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT, DB_TYPE } = pro
 const isPool = process.env.NODE_ENV === 'production' || process.env.NODE_ENV !== 'test';
 
 export const basicOption: Options<MySqlDriver & SqliteDriver> = {
+  // debug: true,
   metadataProvider: TsMorphMetadataProvider,
   host: DB_HOST,
   user: DB_USERNAME,

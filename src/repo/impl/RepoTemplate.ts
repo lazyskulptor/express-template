@@ -12,13 +12,25 @@ export default class RepoTemplate<T extends Object, ID> implements Repository<T,
   persist (entity: T) {
     const cloned = Object.assign(Object.create(Object.getPrototypeOf(entity)), entity) as T;
 
+    const ccc = this.em.getReference<T>(this.entityName, cloned[this.pkName]);
     if (!cloned[this.pkName]) {
+      console.debug(cloned);
       this.em.persist(cloned);
       return cloned;
     }
+
     const ref = this.em.getReference<T>(this.entityName, cloned[this.pkName]);
 
-    wrap(ref).assign(cloned);
+    const values = Object.keys(cloned)
+      .filter(k => k !== this.pkName && cloned[k] !== ref[k])
+      .reduce((accu, k) => {
+        accu[k] = cloned[k];
+        return accu;
+      }, {} as T);
+
+    console.debug(values);
+
+    wrap(ref).assign(values);
     return ref;
   }
 
