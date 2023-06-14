@@ -2,9 +2,9 @@ import { Configuration, EntityManager, MikroORM, Options } from '@mikro-orm/core
 import { MySqlDriver } from '@mikro-orm/mysql';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
-import MemberRepoImpl from './impl/MemberRepoImpl';
 import Repository from '@/service/Repository';
 import Member from '@/domain/model/Member';
+import RepoTemplate from './impl/RepoTemplate';
 
 const { DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT, DB_TYPE } = process.env;
 const isPool = process.env.NODE_ENV === 'production' || process.env.NODE_ENV !== 'test';
@@ -58,7 +58,8 @@ const ctx = {} as RepoContext;
  * initOrm is called in index.ts to boot service or global-suite.ts to test
  */
 export const repoContext = (em?: EntityManager) => {
-  ctx.memRepo = ctx.memRepo ?? new MemberRepoImpl(em ?? orm.em);
+  // ctx.memRepo = ctx.memRepo ?? new MemberRepoImpl(em ?? orm.em);
+  ctx.memRepo = ctx.memRepo ?? new RepoTemplate<Member, Number>(em ?? orm.em, Member);
   return ctx;
 };
 

@@ -2,7 +2,7 @@ import initOrm from '@/repo/repo-context';
 import Member from '@/domain/model/Member';
 import { EntityManager, MikroORM } from '@mikro-orm/core';
 import MemberService from '@/service/MemberService';
-import MemberRepoImpl from '@/repo/impl/MemberRepoImpl';
+import RepoTemplate from '@/repo/impl/RepoTemplate';
 
 describe('Meber CRUD', () => {
   let orm: MikroORM;
@@ -12,7 +12,7 @@ describe('Meber CRUD', () => {
   beforeAll(async () => {
     orm = await initOrm();
     em = orm.em.fork();
-    svc = new MemberService(new MemberRepoImpl(em));
+    svc = new MemberService(new RepoTemplate<Member, Number>(em, Member));
   });
 
   it('successes to insert', async () => {
