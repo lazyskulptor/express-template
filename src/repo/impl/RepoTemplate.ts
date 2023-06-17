@@ -1,5 +1,5 @@
 import Repository from "@/service/Repository";
-import { EntityClass, EntityManager, Primary, wrap } from "@mikro-orm/core";
+import { EntityClass, EntityManager, Primary, RequiredEntityData, wrap } from "@mikro-orm/core";
 
 export default class RepoTemplate<T extends Object, ID> implements Repository<T, ID> {
 
@@ -10,27 +10,22 @@ export default class RepoTemplate<T extends Object, ID> implements Repository<T,
   }
 
   persist (entity: T) {
-    const cloned = Object.assign(Object.create(Object.getPrototypeOf(entity)), entity) as T;
 
-    const ccc = this.em.getReference<T>(this.entityName, cloned[this.pkName]);
-    if (!cloned[this.pkName]) {
-      console.debug(cloned);
+    if (!entity[this.pkName]) {
+      const cloned = this.cloneObj(entity);
       this.em.persist(cloned);
       return cloned;
     }
 
-    const ref = this.em.getReference<T>(this.entityName, cloned[this.pkName]);
+    const ref = this.em.getReference<T>(this.entityName, entity[this.pkName]);
+    const cloned = this.cloneObj(entity, false);
 
-    const values = Object.keys(cloned)
-      .filter(k => k !== this.pkName && cloned[k] !== ref[k])
-      .reduce((accu, k) => {
-        accu[k] = cloned[k];
-        return accu;
-      }, {} as T);
-
-    console.debug(values);
-
-    wrap(ref).assign(values);
+    Object.keys(cloned)
+      .filter(k => k !== this.pkName && cloned[k] !== ref[k] && cloned[k] !== undefined)
+      .forEach(k => {
+        ref[k] = cloned[k];
+      });
+    this.em.merge(ref);
     return ref;
   }
 
@@ -48,4 +43,13 @@ export default class RepoTemplate<T extends Object, ID> implements Repository<T,
   flush() {
     return this.em.flush();
   };
+
+  private cloneObj(obj: T, hasPK = true) {
+    const type = obj.constructor.name;
+    const data = wrap(obj).toPOJO() as RequiredEntityData<T>;
+    if (!hasPK) {
+      delete data[this.pkName];
+    }
+    return this.em.create(type, data, { managed: true });
+  }
 }

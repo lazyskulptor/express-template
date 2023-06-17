@@ -1,4 +1,4 @@
-import { Collection, Entity, ManyToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, PrimaryKey } from "@mikro-orm/core";
 
 @Entity()
 export default class Authority {
@@ -8,9 +8,5 @@ export default class Authority {
   }
 
   @PrimaryKey()
-  @Property()
-  id: number;
-
-  @Property()
   name: string;
 }

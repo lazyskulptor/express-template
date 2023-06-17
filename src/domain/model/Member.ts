@@ -26,13 +26,9 @@ export default class Member {
   @Property()
   comment?: string;
 
-  @Property({ onUpdate: () => new Date() })
-  updatedAt = new Date();
+  @Property({ onCreate: () => new Date(), onUpdate: () => new Date(), version: true })
+  updatedAt: Date;
 
-  @Property()
-  createdAt = new Date();
-
-  // get authorities() {
-  //   return this._authorities;
-  // }
+  @Property({ onCreate: () => new Date() })
+  createdAt: Date;
 }

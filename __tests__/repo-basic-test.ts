@@ -12,7 +12,7 @@ describe('CRUD user from Database', () => {
   it('should work', async () => {
     const em = orm.em.fork();
     const mem = new Member();
-    mem.name = 'Park';
+    mem.username = 'Park';
     mem.comment = 'test insertion';
 
     await em.persistAndFlush(mem);
