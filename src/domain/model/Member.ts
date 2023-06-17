@@ -26,7 +26,7 @@ export default class Member {
   @Property()
   comment?: string;
 
-  @Property({ onCreate: () => new Date(), onUpdate: () => new Date(), version: true })
+  @Property({ onCreate: () => new Date(), onUpdate: () => new Date() })
   updatedAt: Date;
 
   @Property({ onCreate: () => new Date() })
