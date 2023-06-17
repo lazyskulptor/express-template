@@ -1,4 +1,5 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { Collection, Entity, ManyToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import Authority from "@/domain/model/Authority";
 
 @Entity()
 export default class Member {
@@ -8,8 +9,26 @@ export default class Member {
   id: number;
 
   @Property()
-  name: string;
+  username: string;
+
+  @Property()
+  password: string;
+
+  @Property()
+  firstName: string;
+
+  @Property()
+  lastName: string;
+
+  @ManyToMany()
+  authorities = new Collection<Authority>(this);
 
   @Property()
   comment?: string;
+
+  @Property({ onCreate: () => new Date(), onUpdate: () => new Date(), version: true })
+  updatedAt: Date;
+
+  @Property({ onCreate: () => new Date() })
+  createdAt: Date;
 }

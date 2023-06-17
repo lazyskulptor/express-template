@@ -1,16 +1,19 @@
 import Member from '@/domain/model/Member';
-import MemberRepo from '@/service/MemberRepo';
+import Repository from './Repository';
 
 export default class MemberService {
-  constructor(private repo: MemberRepo) {
+  constructor(private repo: Repository<Member, Number>) {
   }
 
-  persist (entity: Member) {
-    return this.repo.persist(entity);
+  async persist (entity: Member) {
+    const persisted = this.repo.persist(entity);
+    await this.repo.flush();
+    return persisted;
   }
 
   async deleteById (id: number) {
     this.repo.deleteById(id);
+    await this.repo.flush();
   };
 
   async findById(id: number) {

@@ -21,14 +21,14 @@ describe('test member path', () => {
   it('should get Member info', async () => {
     const memRepo = repoContext(em).memRepo;
     const mem = new Member();
-    mem.name = 'Park';
+    mem.username = 'Park';
     const inserted = memRepo.persist(mem);
     await em.flush();
 
     await request.get(ENDPOINT + `/${inserted.id}`)
       .expect(200)
       .then(res => {
-        expect(res.body.name).toBe(mem.name);
+        expect(res.body.name).toBe(mem.username);
       });
   });
 });
