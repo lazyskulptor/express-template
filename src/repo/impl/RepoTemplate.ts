@@ -1,7 +1,9 @@
+import Page from "@/domain/spec/Page";
+import Spec from "@/domain/spec/Spec";
 import Repository from "@/service/Repository";
 import { EntityClass, EntityManager, Primary, RequiredEntityData, wrap } from "@mikro-orm/core";
 
-export default class RepoTemplate<T extends Object, ID> implements Repository<T, ID> {
+export default class RepoTemplate<T extends object, ID> implements Repository<T, ID> {
 
   private pkName: string;
 
@@ -34,15 +36,29 @@ export default class RepoTemplate<T extends Object, ID> implements Repository<T,
     this.em.remove(e);
   }
 
-  async findById(id: ID) {
-    const where = {};
-    where[this.pkName] = id;
-    return await this.em.findOne<T, never>(this.entityName, where);
+  async findOneBySpec(spec: Spec<T>) {
+    return await this.em.findOne(this.entityName, spec.toWhere(), { populate: true });
+  }
+
+  async findPageBySpec(
+    spec: Spec<T>,
+    page = Page.req<T>(this.entityName, { offset: 0, limit: 20 })
+  ) {
+    const result = await this.em.findAndCount(this.entityName, spec.toWhere(), {
+      offset: page.offset,
+      limit: page.limit,
+      populate: page.populate,
+    });
+
+    return page.clone({
+      list: result[0],
+      totalCnt: result[1],
+    });
   }
 
   flush() {
     return this.em.flush();
-  };
+  }
 
   private cloneObj(obj: T, hasPK = true) {
     const type = obj.constructor.name;

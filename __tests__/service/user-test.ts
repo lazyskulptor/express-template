@@ -13,7 +13,7 @@ describe('Meber CRUD', () => {
   beforeAll(async () => {
     orm = await initOrm();
     em = orm.em.fork();
-    svc = new MemberService(new RepoTemplate<Member, Number>(em, Member));
+    svc = new MemberService(new RepoTemplate<Member, number>(em, Member));
   });
 
   it('successes to insert', async () => {

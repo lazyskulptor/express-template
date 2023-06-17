@@ -49,7 +49,7 @@ const initOrm = async () => {
 };
 
 type RepoContext = {
-  memRepo: Repository<Member, Number>;
+  memRepo: Repository<Member, number>;
 };
 
 const ctx = {} as RepoContext;
@@ -60,7 +60,7 @@ const ctx = {} as RepoContext;
  */
 export const repoContext = (em?: EntityManager) => {
   // ctx.memRepo = ctx.memRepo ?? new MemberRepoImpl(em ?? orm.em);
-  ctx.memRepo = ctx.memRepo ?? new RepoTemplate<Member, Number>(em ?? orm.em, Member);
+  ctx.memRepo = ctx.memRepo ?? new RepoTemplate<Member, number>(em ?? orm.em, Member);
   return ctx;
 };
 

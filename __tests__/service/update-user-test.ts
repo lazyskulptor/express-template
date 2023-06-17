@@ -13,7 +13,7 @@ describe('Update Meber', () => {
   beforeAll(async () => {
     orm = await initOrm();
     em = orm.em.fork();
-    svc = new MemberService(new RepoTemplate<Member, Number>(em, Member));
+    svc = new MemberService(new RepoTemplate<Member, number>(em, Member));
   });
 
   it('update case adding to collection', async () => {
