@@ -6,7 +6,10 @@ type AppContext = {
 };
 const context = {} as AppContext;
 const ctx = () => {
-  context.memSvc = context.memSvc ?? new MemberService(repoContext().memRepo);
+  context.memSvc = context.memSvc ?? new MemberService(
+    repoContext().memRepo,
+    repoContext().authRepo
+  );
 
   return context;
 };

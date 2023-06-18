@@ -5,6 +5,7 @@ import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import Repository from '@/service/Repository';
 import Member from '@/domain/model/Member';
 import RepoTemplate from './impl/RepoTemplate';
+import Authority from '@/domain/model/Authority';
 
 const { DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT, DB_TYPE } = process.env;
 const isPool = process.env.NODE_ENV === 'production' || process.env.NODE_ENV !== 'test';
@@ -50,6 +51,7 @@ const initOrm = async () => {
 
 type RepoContext = {
   memRepo: Repository<Member, number>;
+  authRepo: Repository<Authority, number>;
 };
 
 const ctx = {} as RepoContext;
