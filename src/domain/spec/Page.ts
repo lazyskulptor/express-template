@@ -26,7 +26,7 @@ export default class Page<T extends object> {
     return new Page<Sub>(args);
   }
 
-  clone<Hint extends string = never>(args: Partial<Page<T>> & Populate<T, Hint> = {}) {
+  clone<Hint extends string = never>(args: Partial<Page<T>> & Populate<T, Hint> = {}): Page<T> {
     return new Page({
       ... this,
       ...args,

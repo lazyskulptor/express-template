@@ -13,14 +13,17 @@ describe('Update Meber', () => {
   beforeAll(async () => {
     orm = await initOrm();
     em = orm.em.fork();
-    svc = new MemberService(new RepoTemplate<Member, number>(em, Member));
+    svc = new MemberService(
+      new RepoTemplate<Member, number>(em, Member),
+      new RepoTemplate<Authority, number>(em, Authority)
+    );
   });
 
   it('update case adding to collection', async () => {
     const mem1 = genMember();
     const mem2 = genMember();
 
-    const auth = new Authority('member');
+    const auth = new Authority('member1');
     mem2.authorities.add(auth);
 
     const inserted = await svc.persist(mem1);
@@ -30,47 +33,12 @@ describe('Update Meber', () => {
     mem1.id = inserted.id;
     mem1.authorities.add(auth);
     await svc.persist(mem1);
+    em.clear();
 
     const persisted = await svc.findById(inserted.id);
     expect(persisted.username).toBe('Lee');
     expect(persisted.authorities.getItems()[0].name).toBe(auth.name);
     expect(persisted.createdAt.getTime()).toBeLessThan(persisted.updatedAt.getTime());
-  });
-
-  it('update case overwriting collection with persisted one', async () => {
-    const mem1 = genMember();
-    const mem2 = genMember();
-
-    const auth = new Authority('member');
-    mem2.authorities.add(auth);
-
-    const inserted = await svc.persist(mem1);
-    const persistedMem2 = await svc.persist(mem2);
-
-    mem1.id = inserted.id;
-    mem1.authorities = persistedMem2.authorities;
-    await svc.persist(mem1);
-
-    const persisted = await svc.findById(inserted.id);
-    expect(persisted.authorities.getItems()[0].name).toBe(auth.name);
-    expect(persisted.createdAt.getTime()).toBeLessThan(persisted.updatedAt.getTime());
-  });
-
-  it('update case overwriting collection with not persisted one', async () => {
-    const mem1 = genMember();
-    const mem2 = genMember();
-
-    const auth = new Authority('member');
-    mem2.authorities.add(auth);
-
-    const inserted = await svc.persist(mem1);
-
-    mem1.id = inserted.id;
-    mem1.authorities = mem2.authorities;
-    await svc.persist(mem1);
-
-    const persisted = await svc.findById(inserted.id);
-    expect(persisted.authorities.getItems()[0].name).toBe(auth.name);
   });
 });
 

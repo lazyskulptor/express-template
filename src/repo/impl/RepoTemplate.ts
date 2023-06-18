@@ -20,14 +20,9 @@ export default class RepoTemplate<T extends object, ID> implements Repository<T,
     }
 
     const ref = this.em.getReference<T>(this.entityName, entity[this.pkName]);
-    const cloned = this.cloneObj(entity, false);
-
-    Object.keys(cloned)
-      .filter(k => k !== this.pkName && cloned[k] !== ref[k] && cloned[k] !== undefined)
-      .forEach(k => {
-        ref[k] = cloned[k];
-      });
-    this.em.merge(ref);
+    const data = wrap(entity).toPOJO();
+    delete data[this.pkName];
+    wrap(ref).assign(data);
     return ref;
   }
 
@@ -44,7 +39,8 @@ export default class RepoTemplate<T extends object, ID> implements Repository<T,
     spec: Spec<T>,
     page = Page.req<T>(this.entityName, { offset: 0, limit: 20 })
   ) {
-    const result = await this.em.findAndCount(this.entityName, spec.toWhere(), {
+    const where = spec && spec.toWhere() ? spec.toWhere() : {};
+    const result = await this.em.findAndCount(this.entityName, where, {
       offset: page.offset,
       limit: page.limit,
       populate: page.populate,
@@ -66,6 +62,15 @@ export default class RepoTemplate<T extends object, ID> implements Repository<T,
     if (!hasPK) {
       delete data[this.pkName];
     }
+    return this.em.create(type, data);
+  }
+
+  private copyObj(obj: T, hasPK = true) {
+    const type = obj.constructor.name;
+    const data = wrap(obj).toPOJO() as RequiredEntityData<T>;
+    // if (!hasPK) {
+    //   delete data[this.pkName];
+    // }
     return this.em.create(type, data, { managed: true });
   }
 }

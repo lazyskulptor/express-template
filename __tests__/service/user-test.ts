@@ -13,7 +13,10 @@ describe('Meber CRUD', () => {
   beforeAll(async () => {
     orm = await initOrm();
     em = orm.em.fork();
-    svc = new MemberService(new RepoTemplate<Member, number>(em, Member));
+    svc = new MemberService(
+      new RepoTemplate<Member, number>(em, Member),
+      new RepoTemplate<Authority, number>(em, Authority)
+    );
   });
 
   it('successes to insert', async () => {
@@ -31,6 +34,7 @@ describe('Meber CRUD', () => {
     mem.authorities.add(auth);
 
     const inserted = await svc.persist(mem);
+    em.clear();
 
     const persisted = await svc.findById(inserted.id);
 

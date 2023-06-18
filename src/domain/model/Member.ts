@@ -21,7 +21,7 @@ export default class Member {
   lastName: string;
 
   @ManyToMany()
-  authorities = new Collection<Authority>(this);
+  readonly authorities = new Collection<Authority>(this);
 
   @Property()
   comment?: string;
