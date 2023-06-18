@@ -20,15 +20,9 @@ export default class RepoTemplate<T extends object, ID> implements Repository<T,
     }
 
     const ref = this.em.getReference<T>(this.entityName, entity[this.pkName]);
-    console.debug(entity['authorities']);
-    console.debug(Object.getPrototypeOf(entity['authorities']));
     const data = wrap(entity).toPOJO();
-    delete data[this.pkName]
-    console.debug(Object.getPrototypeOf(data['authorities']));
-    console.debug(ref);
+    delete data[this.pkName];
     wrap(ref).assign(data);
-    console.debug(data['authorities']);
-    console.debug(ref);
     return ref;
   }
 

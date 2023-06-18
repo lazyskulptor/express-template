@@ -11,9 +11,7 @@ export default class MemberService {
   }
 
   async persist (entity: Member) {
-    console.debug(entity.authorities);
     entity.authorities.set(await this.checkPreExistAuth(...entity.authorities.getItems()));
-    console.debug(entity.authorities);
     const persisted = this.repo.persist(entity);
     await this.repo.flush();
     return persisted;
