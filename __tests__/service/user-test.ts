@@ -40,6 +40,7 @@ describe('Meber CRUD', () => {
 
     expect(persisted.username).toBe('username');
     expect(persisted.authorities.getItems()[0].name).toBe(auth.name);
+    expect(persisted.createdAt).toBe(persisted.createdAt);
   });
 
   it('delete', async () => {
