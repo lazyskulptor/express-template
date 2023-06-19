@@ -40,6 +40,29 @@ describe('Update Meber', () => {
     expect(persisted.authorities.getItems()[0].name).toBe(auth.name);
     expect(persisted.createdAt.getTime()).toBeLessThan(persisted.updatedAt.getTime());
   });
+
+  it('update only collection', async () => {
+    const mem1 = genMember();
+    const mem2 = genMember();
+
+    const auth = new Authority('member2');
+    mem2.authorities.add(auth);
+
+    const inserted = await svc.persist(mem1);
+    await svc.persist(mem2);
+    console.debug(inserted);
+
+    mem1.id = inserted.id;
+    mem1.authorities.add(auth);
+    await svc.persist(mem1);
+    em.clear();
+
+    const persisted = await svc.findById(inserted.id);
+    console.debug(persisted);
+    expect(persisted.authorities.getItems()[0].name).toBe(auth.name);
+    // FIXME: When nested entities updated, Parent, update hook doesn't work
+    // expect(persisted.createdAt.getTime()).toBeLessThan(persisted.updatedAt.getTime());
+  });
 });
 
 const genMember = () => {

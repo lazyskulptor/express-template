@@ -1,4 +1,4 @@
-import { FilterQuery } from "@mikro-orm/core";
+import { EntityDTO, FilterQuery, wrap } from "@mikro-orm/core";
 import Spec from "./Spec";
 
 export default class EqualSpec<T extends object> extends Spec<T> {
@@ -19,6 +19,29 @@ export default class EqualSpec<T extends object> extends Spec<T> {
   }
 
   toWhere(): FilterQuery<T> {
-    return this.criteria;
+    const filter = wrap(this.criteria).toPOJO();
+    return this.filterEmpty(filter);
+  }
+
+  private filterEmpty(obj: unknown) {
+    const queue = [obj];
+    const filter = (prop: unknown) => {
+      Object.entries(prop)
+        .forEach(([k, v]) => {
+          const isArray = Array.isArray(v);
+          if (!v || (isArray && v.length === 0)) {
+            delete prop[k];
+          } else if (isArray) {
+            v.forEach(e => queue.push(e));
+          } else if (typeof v === 'object') {
+            queue.push(v);
+          }
+        });
+    };
+    while(queue.length > 0) {
+      const ele = queue.pop();
+      filter(ele);
+    }
+    return obj as FilterQuery<T>;
   }
 }
