@@ -4,6 +4,9 @@ import { EntityManager, MikroORM } from '@mikro-orm/core';
 import MemberService from '@/service/MemberService';
 import RepoTemplate from '@/repo/impl/RepoTemplate';
 import Authority from '@/domain/model/Authority';
+import Page from '@/domain/spec/Page';
+import { True } from '@/domain/spec/True';
+import { False } from '@/domain/spec/False';
 
 describe('Meber CRUD', () => {
   let orm: MikroORM;
@@ -41,6 +44,20 @@ describe('Meber CRUD', () => {
     expect(persisted.username).toBe('username');
     expect(persisted.authorities.getItems()[0].name).toBe(auth.name);
     expect(persisted.createdAt).toBe(persisted.createdAt);
+  });
+
+  it('find Page including All', async () => {
+    const mem = genMember();
+    const auth = new Authority('admin');
+    mem.authorities.add(auth);
+    await svc.persist(mem);
+    em.clear();
+
+    const page = Page.req({}, Member);
+    const all = await svc.findPageBySpec(True(Member), page);
+    const none = await svc.findPageBySpec(False(Member), page);
+    expect(all.list.length).toBeGreaterThan(0);
+    expect(none.list.length).toBe(0);
   });
 
   it('delete', async () => {

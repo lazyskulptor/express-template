@@ -6,6 +6,9 @@ import cors from "cors";
 import { BadRequestException, NotFoundException } from '@/domain/exceptions';
 import router from '@/router/user-router';
 import { MikroORM, RequestContext } from '@mikro-orm/core';
+import { RegisterRoutes } from './routes';
+import swaggerJson from './swagger.json';
+import swaggerUI from 'swagger-ui-express';
 
 const errorHandler = (err, req, res, _next): ErrorRequestHandler => {
   const obj = {
@@ -48,6 +51,8 @@ const initApp = async (orm: MikroORM) => {
   app.use(bodyParser.json());
   app.use((_req, _res, next) => RequestContext.create(orm.em, next));
   app.use(router);
+  RegisterRoutes(app);
+  app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJson));
 
   app.use(errorHandler);
 

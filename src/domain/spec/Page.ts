@@ -20,8 +20,8 @@ export default class Page<T extends object> {
   }
 
   static req<Sub extends object, Hint extends string = never>(
-    _entityType: EntityClass<Sub>,
-    args: Pick<Partial<Page<Sub>>, 'offset' | 'limit' | 'populate'> & Populate<Sub, Hint>
+    args: Pick<Partial<Page<Sub>>, 'offset' | 'limit' | 'populate'> & Populate<Sub, Hint>,
+    _entityType?: EntityClass<Sub>,
   ) {
     return new Page<Sub>(args);
   }
