@@ -14,7 +14,7 @@ import ctx from '../app-context';
 import Member from "../domain/model/Member";
 import PageDTO from "./PageDto";
 import True from "../domain/spec/True";
-import Page from "@/domain/spec/Page";
+import Page from "../domain/spec/Page";
 
 @Route("users")
 export class MembersController extends Controller {
