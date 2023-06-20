@@ -40,7 +40,7 @@ export default class MemberService {
     const spec = notPersisted.length <= 0 ? undefined : notPersisted
       .map(auth => new EqualSpec(auth) as Spec<Authority>)
       .reduce((l, r) => l.or(r));
-    const { list } = await this.authRepo.findPageBySpec(spec, Page.req(Authority, { limit: auths.length }));
+    const { list } = await this.authRepo.findPageBySpec(spec, Page.req({ limit: auths.length }));
     list.sort((l, r) => l.name.localeCompare(r.name));
 
     let i = 0;

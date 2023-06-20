@@ -44,3 +44,7 @@ lerna-debug.log*
 # mikro-orm
 temp
 src/migrations/sqlite
+
+# tsoa
+src/swagger.json
+src/routes.ts

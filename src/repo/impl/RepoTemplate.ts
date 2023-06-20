@@ -37,7 +37,7 @@ export default class RepoTemplate<T extends object, ID> implements Repository<T,
 
   async findPageBySpec(
     spec: Spec<T>,
-    page = Page.req<T>(this.entityName, { offset: 0, limit: 20 })
+    page = Page.req<T>({ offset: 0, limit: 20 })
   ) {
     const where = spec && spec.toWhere() ? spec.toWhere() : {};
     const result = await this.em.findAndCount(this.entityName, where, {

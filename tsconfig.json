@@ -12,6 +12,7 @@
     "declaration": true,
     "sourceMap": true,
     "baseUrl": "./",
+    "resolveJsonModule": true,
     "paths": {
       "@/*": ["./src/*"],
       "@test/*": ["./__tests__/*"],

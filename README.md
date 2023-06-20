@@ -1,4 +1,16 @@
 # Node.JS Express Template with Mikro-ORM
+## Main dependent Library
+- [mikro-orm](https://mikro-orm.io) for persistance layer and documentation
+- [tsoa](https://github.com/lukeautry/tsoa) for presentation layer
+- [module-alias](https://github.com/ilearnio/module-alias) to manage modules
+- [jest](https://jestjs.io) for unit test
+- [supertest]([https://jestjs.io](https://github.com/ladjs/supertest)) for e2e test
+> **Warning**  
+> tsconfig alias path not works with tsoa. Therefore Controller have to import with relative path.
+> ```
+> import Page from "../domain/spec/Page"; // relative path in Controllers, because tsoa error with alias
+> import Page from '@/domain/spec/Page'   // Another files work with alias
+> ```
 
 ## Run Application
 ### Run and configure application
@@ -24,3 +36,10 @@ npx mikro-orm migration:create --initial
 
 npx mikro-orm migration:create
 ```
+
+### Routers
+> **Note**  
+> `routes.ts`, `swagger.json` files are generaged with tsoa library.  
+> When files aren't generaged, `app.ts` file would errors.  
+> For example when just download this project.  
+> Then build or generate with commands `npm run build` or `npm run routes`
