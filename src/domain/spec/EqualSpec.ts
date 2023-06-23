@@ -1,4 +1,4 @@
-import { EntityDTO, FilterQuery, wrap } from "@mikro-orm/core";
+import { FilterQuery, wrap } from "@mikro-orm/core";
 import Spec from "./Spec";
 
 export default class EqualSpec<T extends object> extends Spec<T> {
