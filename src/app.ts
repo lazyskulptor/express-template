@@ -4,7 +4,6 @@ import {urlencoded, json as jsonencoded} from 'body-parser';
 import bodyParser from 'body-parser';
 import cors from "cors";
 import { BadRequestException, NotFoundException } from '@/domain/exceptions';
-import router from '@/router/user-router';
 import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { RegisterRoutes } from './routes';
 import swaggerJson from './swagger.json';
@@ -50,7 +49,6 @@ const initApp = async (orm: MikroORM) => {
   app.use(jsonencoded());
   app.use(bodyParser.json());
   app.use((_req, _res, next) => RequestContext.create(orm.em, next));
-  app.use(router);
   RegisterRoutes(app);
   app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJson));
 

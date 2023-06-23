@@ -5,8 +5,8 @@ import MemberService from '@/service/MemberService';
 import RepoTemplate from '@/repo/impl/RepoTemplate';
 import Authority from '@/domain/model/Authority';
 import Page from '@/domain/spec/Page';
-import { True } from '@/domain/spec/True';
-import { False } from '@/domain/spec/False';
+import True from '@/domain/spec/True';
+import False from '@/domain/spec/False';
 
 describe('Meber CRUD', () => {
   let orm: MikroORM;

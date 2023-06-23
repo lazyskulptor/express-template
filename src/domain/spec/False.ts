@@ -10,10 +10,10 @@ const FalseClass = new class extends Spec<object> {
         '1': 0,
       };
     }
-}
+};
 
 const False = <T extends object>(_: T | EntityClass<T>) => {
-  return FalseClass as unknown as Spec<T>
-}
+  return FalseClass as unknown as Spec<T>;
+};
 
 export default False;
