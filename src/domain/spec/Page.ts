@@ -20,14 +20,14 @@ export default class Page<T extends object> {
   }
 
   static req<Sub extends object, Hint extends string = never>(
-    args: Pick<Partial<Page<Sub>>, 'offset' | 'limit' | 'populate'> & Populate<Sub, Hint>,
+    args: Pick<Partial<Page<Sub>>, 'offset' | 'limit'> | Populate<Sub, Hint>,
     _entityType?: EntityClass<Sub>,
   ) {
-    return new Page<Sub>(args);
+    return new Page<Sub>(args as Partial<Page<Sub>>);
   }
 
-  clone<Hint extends string = never>(args: Partial<Page<T>> & Populate<T, Hint> = {}): Page<T> {
-    return new Page({
+  clone<Hint extends string = never>(args: Partial<Omit<Page<T>, 'populate'>> | Populate<T, Hint> = {}) {
+    return new Page<T>({
       ... this,
       ...args,
     });
