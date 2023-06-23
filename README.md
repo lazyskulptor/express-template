@@ -5,12 +5,6 @@
 - [module-alias](https://github.com/ilearnio/module-alias) to manage modules
 - [jest](https://jestjs.io) for unit test
 - [supertest]([https://jestjs.io](https://github.com/ladjs/supertest)) for e2e test
-> **Warning**  
-> tsconfig alias path not works with tsoa. Therefore Controller have to import with relative path.
-> ```
-> import Page from "../domain/spec/Page"; // relative path in Controllers, because tsoa error with alias
-> import Page from '@/domain/spec/Page'   // Another files work with alias
-> ```
 
 ## Run Application
 ### Run and configure application

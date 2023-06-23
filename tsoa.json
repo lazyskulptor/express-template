@@ -8,5 +8,11 @@
   },
   "routes": {
     "routesDir": "src"
+  },
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "allowSyntheticDefaultImports": true
   }
 }
