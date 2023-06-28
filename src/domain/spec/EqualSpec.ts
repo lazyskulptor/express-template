@@ -29,7 +29,7 @@ export default class EqualSpec<T extends object> extends Spec<T> {
       Object.entries(prop)
         .forEach(([k, v]) => {
           const isArray = Array.isArray(v);
-          if (!v || (isArray && v.length === 0)) {
+          if (typeof v !== 'boolean' && (!v || (isArray && v.length === 0))) {
             delete prop[k];
           } else if (isArray) {
             v.forEach(e => queue.push(e));
